@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}
+    Menu
+{% endblock %}
+{% block content %}
+    <h1 class="mb-4">
+        Our menu
+    </h1>
+    <form class="row g-2 mb-4">
+        <div class="col-md-5">
+            <input class="form-control" name="q" value="{{ query }}" placeholder="Search meals">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" name="category">
+                <option value="">
+                    All categories
+                </option>
+                {% for category in categories %}
+                    <option value="{{ category.pk }}" {% if selected_category == category.pk|stringformat:'s' %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="sort" class="form-select">
+                <option value="">
+                    Sort by
+                </option>
+                <option value="price" {% if sort == 'price' %}selected{% endif %}>
+                    Price: low first
+                </option>
+                <option value="-price" {% if sort == '-price' %}selected{% endif %}>
+                    Price: high first
+                </option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button class="btn btn-dark flex-grow-1">Apply</button><a class="btn btn-outline-secondary" href="{% url 'food:menu' %}">Clear</a>
+        </div>
+    </form>
+    <div class="row g-4">
+        {% for item in foods %}
+            <div class="col-sm-6 col-lg-4">
+                {% include 'food/_card.html' %}
+            </div>
+        {% empty %}
+            <p>
+                No available meals match your search.
+            </p>
+        {% endfor %}
+    </div>
+{% endblock %}

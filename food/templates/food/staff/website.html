@@ -1,0 +1,69 @@
+{% extends 'food/staff/base.html' %}
+{% block title %}
+    Website management
+{% endblock %}
+{% block page_heading %}
+    Website management
+{% endblock %}
+{% block content %}
+    <div class="page-intro">
+        <div>
+            <p class="eyebrow">
+                STOREFRONT
+            </p>
+            <h1>
+                Website management
+            </h1>
+            <p class="text-muted">
+                Update the homepage and choose what customers see.
+            </p>
+        </div>
+    </div>
+    <div class="staff-columns order-columns">
+        <section class="panel">
+            <h2>
+                Homepage promotion
+            </h2>
+            <p class="text-muted">
+                The optional hero image is stored in your configured media directory.
+            </p>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button class="btn btn-brand">Save homepage</button>
+            </form>
+        </section>
+        <section>
+            <div class="panel mb-3">
+                <h2>
+                    Homepage collections
+                </h2>
+                <p>
+                    {{ active_categories }} active categories currently appear on the homepage.
+                </p>
+                <a href="{% url 'staff:categories' %}" class="btn btn-outline-dark">Manage categories</a>
+            </div>
+            <div class="panel">
+                <h2>
+                    Homepage picks
+                </h2>
+                <p>
+                    {{ featured_count }} featured · {{ popular_count }} marked popular. Popular picks use these choices or automatically fall back to available food when none are selected.
+                </p>
+                <a href="{% url 'staff:foods' %}" class="btn btn-outline-dark">Manage food picks</a>
+            </div>
+        </section>
+    </div>
+{% endblock %}

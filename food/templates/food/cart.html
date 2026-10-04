@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}
+    Cart
+{% endblock %}
+{% block content %}
+    <h1>
+        Your cart
+    </h1>
+    {% if lines %}
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>
+                            Meal
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Subtotal
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line in lines %}
+                        <tr>
+                            <td>
+                                {{ line.item.name }}
+                            </td>
+                            <td>
+                                ₹{{ line.item.price }}
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'food:cart_update' line.item.pk %}" class="d-flex gap-2">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" min="0" max="99" value="{{ line.quantity }}" class="form-control" style="width:90px">
+                                    <button class="btn btn-sm btn-outline-dark">Update</button>
+                                </form>
+                            </td>
+                            <td>
+                                ₹{{ line.subtotal }}
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'food:cart_remove' line.item.pk %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-link text-danger">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-end">
+            <h3>
+                Total: ₹{{ total }}
+            </h3>
+            <a class="btn btn-warning btn-lg" href="{% url 'food:checkout' %}">Checkout · Cash on delivery</a>
+        </div>
+    {% else %}
+        <p>
+            Your cart is empty.
+        </p>
+        <a href="{% url 'food:menu' %}" class="btn btn-dark">Browse menu</a>
+    {% endif %}
+{% endblock %}

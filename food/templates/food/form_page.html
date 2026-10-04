@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    {% if title == 'Create your account' %}
+        <section class="signup-card mx-auto">
+            <div class="signup-heading">
+                <span class="signup-mark" aria-hidden="true">G</span>
+                <p class="signup-eyebrow">GOODFOOD</p>
+                <h1>Create your account</h1>
+                <p class="signup-subheading">Join us for delicious food, delivered with care.</p>
+            </div>
+
+            <form method="post" class="signup-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="signup-field">
+                        <label class="form-label" for="{{ field.id_for_label }}">
+                            {{ field.label }} <span class="required-mark">*</span>
+                        </label>
+                        {% if field.name == 'contact_number' %}
+                            <div class="input-group signup-phone-group">
+                                <span class="input-group-text" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" focusable="false">
+                                        <path d="M6.6 2.8h10.8a1.8 1.8 0 0 1 1.8 1.8v14.8a1.8 1.8 0 0 1-1.8 1.8H6.6a1.8 1.8 0 0 1-1.8-1.8V4.6a1.8 1.8 0 0 1 1.8-1.8Zm0 2v13.6h10.8V4.8H6.6Zm4.1 15h2.6v-.8h-2.6v.8Z" />
+                                    </svg>
+                                </span>
+                                <input
+                                    type="tel"
+                                    name="{{ field.html_name }}"
+                                    id="{{ field.id_for_label }}"
+                                    value="{{ field.value|default_if_none:'' }}"
+                                    class="form-control{% if field.errors %} is-invalid{% endif %}"
+                                    placeholder="10-digit mobile number"
+                                    inputmode="numeric"
+                                    autocomplete="tel-national"
+                                    pattern="[6-9][0-9]{9}"
+                                    minlength="10"
+                                    maxlength="10"
+                                    required
+                                    aria-describedby="{{ field.id_for_label }}-help{% if field.errors %} {{ field.id_for_label }}-error{% endif %}"
+                                >
+                            </div>
+                            <div class="form-text" id="{{ field.id_for_label }}-help">
+                                Enter 10 digits, starting with 6, 7, 8, or 9.
+                            </div>
+                        {% else %}
+                            {{ field.as_widget }}
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="invalid-feedback d-block" id="{{ field.id_for_label }}-error">
+                                {% for error in field.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button class="btn btn-warning signup-submit" type="submit">Create account</button>
+            </form>
+
+            <p class="signup-login-link">
+                Already registered? <a href="{% url 'food:login' %}">Log in</a>
+            </p>
+        </section>
+    {% else %}
+        <div class="form-panel mx-auto">
+            <h1 class="h2 mb-4">
+                {{ title }}
+            </h1>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% if title == 'Welcome back' %}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
+                {{ form.as_p }}<button class="btn btn-warning w-100">Continue</button>
+            </form>
+            <p class="mt-3">
+                New here? <a href="{% url 'food:register' %}">Create an account</a>
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

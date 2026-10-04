@@ -1,0 +1,10 @@
+<span class="status-badge
+    {% if value == 'Pending' %}status-pending
+    {% elif value == 'Confirmed' %}status-confirmed
+    {% elif value == 'Preparing' %}status-preparing
+    {% elif value == 'Out for Delivery' %}status-delivery
+    {% elif value == 'Delivered' %}status-delivered
+    {% else %}status-cancelled
+    {% endif %}">
+    {{ value }}
+</span>

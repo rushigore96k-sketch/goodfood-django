@@ -1,0 +1,125 @@
+{% extends 'food/staff/base.html' %}
+{% block title %}
+    Food items
+{% endblock %}
+{% block page_heading %}
+    Food management
+{% endblock %}
+{% block content %}
+    <div class="page-intro">
+        <div>
+            <p class="eyebrow">
+                MENU CATALOG
+            </p>
+            <h1>
+                Food items
+            </h1>
+            <p class="text-muted">
+                Manage prices, availability and homepage picks.
+            </p>
+        </div>
+        <a class="btn btn-brand" href="{% url 'staff:food_add' %}">＋ Add food item</a>
+    </div>
+    <form class="filter-bar">
+        <input name="q" value="{{ query }}" class="form-control" placeholder="Search name or description">
+        <select name="category" class="form-select">
+            <option value="">
+                All categories
+            </option>
+            {% for c in categories %}
+                <option value="{{ c.pk }}" {% if category == c.pk|stringformat:'s' %}selected{% endif %}>
+                    {{ c.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <select name="availability" class="form-select">
+            <option value="">
+                Any availability
+            </option>
+            <option value="true" {% if availability == 'true' %}selected{% endif %}>
+                Available
+            </option>
+            <option value="false" {% if availability == 'false' %}selected{% endif %}>
+                Unavailable
+            </option>
+        </select>
+        <button class="btn btn-dark">Filter</button><a href="{% url 'staff:foods' %}" class="btn btn-outline-secondary">Clear</a>
+    </form>
+    <section class="panel">
+        <div class="table-responsive">
+            <table class="table staff-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Food
+                        </th>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Availability
+                        </th>
+                        <th>
+                            Homepage picks
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in foods %}
+                        <tr>
+                            <td>
+                                <div class="product-cell">
+                                    {% if item.image %}
+                                        <img src="{{ item.image.url }}" alt="">
+                                    {% else %}
+                                        <span class="product-fallback">🍽</span>
+                                    {% endif %}
+                                    <span><strong>{{ item.name }}</strong><small class="d-block text-muted">{{ item.description|truncatewords:8 }}</small></span>
+                                </div>
+                            </td>
+                            <td>
+                                {{ item.category.name }}
+                            </td>
+                            <td>
+                                ₹{{ item.price|floatformat:2 }}
+                            </td>
+                            <td>
+                                {% if item.is_available %}
+                                    <span class="text-success">● Available</span>
+                                {% else %}
+                                    <span class="text-muted">● Hidden</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.is_featured %}
+                                    <span class="featured-tag">Featured</span>
+                                {% endif %}
+ 
+                                {% if item.is_popular %}
+                                    <span class="featured-tag">Popular</span>
+                                {% endif %}
+                                {% if not item.is_featured and not item.is_popular %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                <a href="{% url 'staff:food_edit' item.pk %}">Edit</a><a class="text-danger" href="{% url 'staff:food_delete' item.pk %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                No food items found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

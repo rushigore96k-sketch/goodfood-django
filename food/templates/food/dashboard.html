@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+    My account
+{% endblock %}
+{% block content %}
+    <h1>
+        Hello, {{ user.first_name|default:user.username }}
+    </h1>
+    <div class="row g-3 my-3">
+        <div class="col-md-4">
+            <a class="dashboard-link" href="{% url 'food:orders' %}">📦 My orders</a>
+        </div>
+        <div class="col-md-4">
+            <a class="dashboard-link" href="{% url 'food:profile' %}">👤 Profile</a>
+        </div>
+        <div class="col-md-4">
+            <a class="dashboard-link" href="{% url 'food:menu' %}">🍴 Browse menu</a>
+        </div>
+    </div>
+    <h2 class="h4">
+        Recent orders
+    </h2>
+    {% include 'food/_orders_table.html' %}
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}
+    Order #{{ order.pk }}
+{% endblock %}
+{% block content %}
+    <h1>
+        Order #{{ order.pk }}
+    </h1>
+    <p>
+        <strong>Status:</strong> {{ order.status }} · <strong>Placed:</strong> {{ order.order_date|date:'M j, Y H:i' }}
+    </p>
+    <div class="card card-body mb-4">
+        <p>
+            <strong>Customer:</strong> {{ order.user.get_full_name|default:order.user.username }}
+        </p>
+        <p>
+            <strong>Delivery address:</strong> {{ order.delivery_address }}
+        </p>
+        <p>
+            <strong>Contact:</strong> {{ order.contact_number }}
+        </p>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Meal
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Subtotal
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for line in order.items.all %}
+                <tr>
+                    <td>
+                        {{ line.food_item.name }}
+                    </td>
+                    <td>
+                        {{ line.quantity }}
+                    </td>
+                    <td>
+                        ₹{{ line.price }}
+                    </td>
+                    <td>
+                        ₹{{ line.subtotal }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3 class="text-end">
+        Total ₹{{ order.total_amount }}
+    </h3>
+{% endblock %}

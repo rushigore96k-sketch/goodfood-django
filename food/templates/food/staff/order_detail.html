@@ -1,0 +1,118 @@
+{% extends 'food/staff/base.html' %}
+{% block title %}
+    Order #{{ order.pk }}
+{% endblock %}
+{% block page_heading %}
+    Order #{{ order.pk }}
+{% endblock %}
+{% block content %}
+    <div class="page-intro">
+        <div>
+            <p class="eyebrow">
+                ORDER DETAILS
+            </p>
+            <h1>
+                Order #{{ order.pk }}
+            </h1>
+            <p class="text-muted">
+                Placed {{ order.order_date|date:'F j, Y · H:i' }}
+            </p>
+        </div>
+        {% include 'food/staff/_status.html' with value=order.status %}
+    </div>
+    <div class="staff-columns order-columns">
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>
+                        Items ordered
+                    </h2>
+                    <p>
+                        Purchase-time prices
+                    </p>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table staff-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Item
+                            </th>
+                            <th>
+                                Qty
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                                Subtotal
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for line in order.items.all %}
+                            <tr>
+                                <td>
+                                    {{ line.food_item.name }}
+                                </td>
+                                <td>
+                                    {{ line.quantity }}
+                                </td>
+                                <td>
+                                    ₹{{ line.price|floatformat:2 }}
+                                </td>
+                                <td>
+                                    ₹{{ line.subtotal|floatformat:2 }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="order-total">
+                Total <strong>₹{{ order.total_amount|floatformat:2 }}</strong>
+            </div>
+        </section>
+        <section class="panel">
+            <h2>
+                Customer
+            </h2>
+            <p class="detail-label">
+                Name
+            </p>
+            <p>
+                {{ order.user.get_full_name|default:order.user.username }}
+            </p>
+            <p class="detail-label">
+                Email
+            </p>
+            <p>
+                {{ order.user.email|default:'Not provided' }}
+            </p>
+            <p class="detail-label">
+                Contact
+            </p>
+            <p>
+                {{ order.contact_number }}
+            </p>
+            <p class="detail-label">
+                Delivery address
+            </p>
+            <p>
+                {{ order.delivery_address }}
+            </p>
+            <hr>
+            <h2>
+                Update status
+            </h2>
+            <form method="post" action="{% url 'staff:order_status' order.pk %}">
+                {% csrf_token %}
+                <label class="form-label" for="id_status">
+                    Order status
+                </label>
+                {{ status_form.status }}<button class="btn btn-brand mt-3">Save status</button>
+            </form>
+        </section>
+    </div>
+{% endblock %}

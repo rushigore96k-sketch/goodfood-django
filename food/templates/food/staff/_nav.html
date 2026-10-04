@@ -1,0 +1,41 @@
+<nav class="staff-nav">
+    <div class="nav-label">
+        WORKSPACE
+    </div>
+    <a href="{% url 'staff:dashboard' %}" class="staff-nav-link">
+    ▦ <span>Dashboard</span>
+    </a>
+    <a href="{% url 'staff:orders' %}" class="staff-nav-link">
+    ▤ <span>Orders</span>
+    </a>
+    <a href="{% url 'staff:foods' %}" class="staff-nav-link">
+    ◉ <span>Food items</span>
+    </a>
+    <a href="{% url 'staff:categories' %}" class="staff-nav-link">
+    ◫ <span>Categories</span>
+    </a>
+    <a href="{% url 'staff:users' %}" class="staff-nav-link">
+    ♙ <span>Users</span>
+    </a>
+    <div class="nav-label mt-4">
+        STORE
+    </div>
+    <a href="{% url 'staff:website' %}" class="staff-nav-link">
+    ✧ <span>Website management</span>
+    </a>
+    <a href="{% url 'staff:reports' %}" class="staff-nav-link">
+    ▥ <span>Reports & statistics</span>
+    </a>
+    <a href="/admin/" class="staff-nav-link">
+    ⚙ <span>Django Admin / settings</span>
+    </a>
+    <div class="nav-bottom">
+        <a href="{% url 'food:home' %}" class="staff-nav-link">
+        ↗ <span>Customer website</span>
+        </a>
+        <form method="post" action="{% url 'staff:logout' %}">
+            {% csrf_token %}
+            <button class="staff-nav-link border-0 bg-transparent w-100 text-start">⇥ <span>Log out</span></button>
+        </form>
+    </div>
+</nav>

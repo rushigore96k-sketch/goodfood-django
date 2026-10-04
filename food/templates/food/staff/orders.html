@@ -1,0 +1,101 @@
+{% extends 'food/staff/base.html' %}
+{% block title %}
+    Orders
+{% endblock %}
+{% block page_heading %}
+    Order management
+{% endblock %}
+{% block content %}
+    <div class="page-intro">
+        <div>
+            <p class="eyebrow">
+                FULFILLMENT
+            </p>
+            <h1>
+                Orders
+            </h1>
+            <p class="text-muted">
+                Review orders and keep customers updated.
+            </p>
+        </div>
+    </div>
+    <form class="filter-bar">
+        <input name="q" value="{{ query }}" class="form-control" placeholder="Search order, customer or address">
+        <select name="status" class="form-select">
+            <option value="">
+                All statuses
+            </option>
+            {% for key,label in statuses %}
+                <option value="{{ key }}" {% if status == key %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+        <input type="date" name="start" value="{{ start }}" class="form-control" aria-label="From date">
+        <input type="date" name="end" value="{{ end }}" class="form-control" aria-label="To date">
+        <button class="btn btn-dark">Filter</button><a href="{% url 'staff:orders' %}" class="btn btn-outline-secondary">Clear</a>
+    </form>
+    <section class="panel">
+        <div class="table-responsive">
+            <table class="table staff-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Order
+                        </th>
+                        <th>
+                            Customer
+                        </th>
+                        <th>
+                            Placed
+                        </th>
+                        <th>
+                            Contact
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td class="fw-bold">
+                                #{{ order.pk }}
+                            </td>
+                            <td>
+                                {{ order.user.get_full_name|default:order.user.username }}<small class="d-block text-muted">{{ order.user.email }}</small>
+                            </td>
+                            <td>
+                                {{ order.order_date|date:'M j, Y · H:i' }}
+                            </td>
+                            <td>
+                                {{ order.contact_number }}
+                            </td>
+                            <td>
+                                ₹{{ order.total_amount|floatformat:2 }}
+                            </td>
+                            <td>
+                                {% include 'food/staff/_status.html' with value=order.status %}
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-dark" href="{% url 'staff:order_detail' order.pk %}">Details</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                No matching orders.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

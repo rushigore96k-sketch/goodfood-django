@@ -1,0 +1,94 @@
+{% extends 'food/staff/base.html' %}
+{% block title %}
+    Categories
+{% endblock %}
+{% block page_heading %}
+    Category management
+{% endblock %}
+{% block content %}
+    <div class="page-intro">
+        <div>
+            <p class="eyebrow">
+                MENU COLLECTIONS
+            </p>
+            <h1>
+                Categories
+            </h1>
+            <p class="text-muted">
+                Control which collections appear on the customer homepage.
+            </p>
+        </div>
+        <a class="btn btn-brand" href="{% url 'staff:category_add' %}">＋ Add category</a>
+    </div>
+    <form class="filter-bar">
+        <input name="q" value="{{ query }}" class="form-control" placeholder="Search categories">
+        <select name="active" class="form-select">
+            <option value="">
+                All states
+            </option>
+            <option value="true" {% if active == 'true' %}selected{% endif %}>
+                Active
+            </option>
+            <option value="false" {% if active == 'false' %}selected{% endif %}>
+                Inactive
+            </option>
+        </select>
+        <button class="btn btn-dark">Filter</button><a href="{% url 'staff:categories' %}" class="btn btn-outline-secondary">Clear</a>
+    </form>
+    <section class="panel">
+        <div class="table-responsive">
+            <table class="table staff-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Food items
+                        </th>
+                        <th>
+                            Homepage
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in categories %}
+                        <tr>
+                            <td>
+                                <div class="product-cell">
+                                    {% if c.image %}
+                                        <img src="{{ c.image.url }}" alt="">
+                                    {% else %}
+                                        <span class="product-fallback">◫</span>
+                                    {% endif %}
+                                    <span><strong>{{ c.name }}</strong><small class="d-block text-muted">{{ c.description|truncatewords:10 }}</small></span>
+                                </div>
+                            </td>
+                            <td>
+                                {{ c.food_count }}
+                            </td>
+                            <td>
+                                {% if c.is_active %}
+                                    <span class="text-success">● Active</span>
+                                {% else %}
+                                    <span class="text-muted">● Hidden</span>
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                <a href="{% url 'staff:category_edit' c.pk %}">Edit</a><a class="text-danger" href="{% url 'staff:category_delete' c.pk %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                No categories found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

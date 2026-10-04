@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Profile
+{% endblock %}
+{% block content %}
+    <div class="form-panel">
+        <h1>
+            Profile
+        </h1>
+        <form method="post">
+            {% csrf_token %}
+            <label class="form-label">
+                Full name
+            </label>
+            <input class="form-control mb-3" name="full_name" required value="{{ user.first_name }}">
+            <label class="form-label">
+                Email
+            </label>
+            <input class="form-control mb-3" type="email" name="email" required value="{{ user.email }}">
+            <label class="form-label">
+                Contact number
+            </label>
+            <input class="form-control mb-3" name="contact_number" value="{{ profile.contact_number }}">
+            <button class="btn btn-warning">Save profile</button>
+        </form>
+    </div>
+{% endblock %}

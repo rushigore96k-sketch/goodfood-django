@@ -1,0 +1,26 @@
+<article class="card h-100 food-card">
+    {% if item.image %}
+        <img src="{{ item.image.url }}" class="card-img-top food-image" alt="{{ item.name }}">
+    {% else %}
+        <div class="food-placeholder">
+            🍽️
+        </div>
+    {% endif %}
+    <div class="card-body d-flex flex-column">
+        <small class="text-muted">{{ item.category.name }}</small>
+        <h3 class="h5 mt-1">
+            {{ item.name }}
+        </h3>
+        <p class="text-muted flex-grow-1">
+            {{ item.description|truncatewords:18 }}
+        </p>
+        <div class="d-flex align-items-center justify-content-between">
+            <strong>₹{{ item.price }}</strong><a class="btn btn-outline-dark btn-sm" href="{% url 'food:food_detail' item.pk %}">Details</a>
+        </div>
+        <form method="post" action="{% url 'food:cart_add' item.pk %}" class="mt-2">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button class="btn btn-warning w-100">Add to cart</button>
+        </form>
+    </div>
+</article>

@@ -1,0 +1,41 @@
+{% extends 'food/staff/base.html' %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block page_heading %}
+    Confirm deletion
+{% endblock %}
+{% block content %}
+    <div class="page-intro">
+        <div>
+            <p class="eyebrow">
+                CONFIRMATION
+            </p>
+            <h1>
+                {{ title }}
+            </h1>
+        </div>
+    </div>
+    <section class="panel confirm-panel">
+        <div class="confirm-icon">
+            !
+        </div>
+        <h2>
+            Delete “{{ object }}”?
+        </h2>
+        {% if protected %}
+            <p class="alert alert-warning">
+                This item appears in order history and cannot be deleted. You can mark it unavailable from its edit page instead.
+            </p>
+            <a class="btn btn-outline-dark" href="{% url 'staff:food_edit' object.pk %}">Edit food item</a>
+        {% else %}
+            <p>
+                This action cannot be undone.
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger">Yes, delete</button><a class="btn btn-outline-secondary ms-2" href="{% url cancel_url %}">Keep it</a>
+            </form>
+        {% endif %}
+    </section>
+{% endblock %}

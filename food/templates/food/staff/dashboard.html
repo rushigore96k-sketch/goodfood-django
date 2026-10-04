@@ -1,0 +1,188 @@
+{% extends 'food/staff/base.html' %}
+{% block title %}
+    Dashboard
+{% endblock %}
+{% block page_heading %}
+    Dashboard overview
+{% endblock %}
+{% block content %}
+    <div class="welcome-row">
+        <div>
+            <p class="eyebrow">
+                RESTAURANT OVERVIEW
+            </p>
+            <h1>
+                Good day, {{ request.user.first_name|default:request.user.username }}
+            </h1>
+            <p class="text-muted">
+                Here'as what's happening with your restaurant today.
+            </p>
+        </div>
+        <a class="btn btn-brand" href="{% url 'staff:foods' %}"> + Add food item</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-icon icon-orange">▤</span><span>Total orders</span><strong>{{ total_orders }}</strong><small>All time</small>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon icon-yellow">◷</span><span>Pending orders</span><strong>{{ pending_orders }}</strong><small>Need attention</small>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon icon-green">✓</span><span>Completed</span><strong>{{ completed_orders }}</strong><small>Delivered orders</small>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon icon-blue">♙</span><span>Total users</span><strong>{{ total_users }}</strong><small>Registered accounts</small>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon icon-purple">◉</span><span>Food items</span><strong>{{ total_foods }}</strong><small>In your catalog</small>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon icon-pink">◫</span><span>Categories</span><strong>{{ total_categories }}</strong><small>Menu collections</small>
+        </div>
+        <div class="stat-card revenue-card">
+            <span class="stat-icon icon-green">₹</span><span>Revenue</span><strong>₹{{ total_revenue|floatformat:2 }}</strong><small>Delivered orders</small>
+        </div>
+    </div>
+
+    <div class="staff-columns">
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>
+                        Recent orders
+                    </h2>
+                    <p>
+                        Latest customer activity
+                    </p>
+                </div>
+                <a href="{% url 'staff:orders' %}">View all →</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table staff-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Order
+                            </th>
+                            <th>
+                                Customer
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Total
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recent_orders %}
+                            <tr>
+                                <td>
+                                    <a class="fw-bold" href="{% url 'staff:order_detail' order.pk %}">#{{ order.pk }}</a>
+                                </td>
+                                <td>
+                                    {{ order.user.get_full_name|default:order.user.username }}
+                                </td>
+                                <td>
+                                    {{ order.order_date|date:'M j, H:i' }}
+                                </td>
+                                <td>
+                                    ₹{{ order.total_amount|floatformat:2 }}
+                                </td>
+                                <td>
+                                    {% include 'food/staff/_status.html' with value=order.status %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    No orders yet. New orders will appear here.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>
+                        Order status
+                    </h2>
+                    <p>
+                        All-time distribution
+                    </p>
+                </div>
+            </div>
+            {% for row in status_summary %}
+                <div class="progress-row">
+                    <div>
+                        <span>{{ row.status }}</span><strong>{{ row.count }}</strong>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width:{{ row.percent }}%">
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty-state">
+                    Order status data will appear here.
+                </p>
+            {% endfor %}
+        </section>
+    </div>
+
+    <div class="staff-columns lower-columns">
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>
+                        Popular food
+                    </h2>
+                    <p>
+                        Ranked by quantities ordered
+                    </p>
+                </div>
+                <a href="{% url 'staff:foods' %}">Manage food →</a>
+            </div>
+            {% for item in popular_foods %}
+                <div class="simple-row">
+                    <span class="rank-dot">{{ forloop.counter }}</span><strong>{{ item.food_item__name }}</strong><span class="ms-auto text-muted">{{ item.units }} sold</span>
+                </div>
+            {% empty %}
+                <p class="empty-state">
+                    Popularity will appear after customers place orders.
+                </p>
+            {% endfor %}
+        </section>
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>
+                        Recent users
+                    </h2>
+                    <p>
+                        Newest accounts
+                    </p>
+                </div>
+                <a href="{% url 'staff:users' %}">View all →</a>
+            </div>
+            {% for person in recent_users %}
+                <div class="simple-row">
+                    <span class="avatar">{{ person.username|first|upper }}</span><span><strong>{{ person.get_full_name|default:person.username }}</strong><small class="d-block text-muted">{{ person.email|default:'No email added' }}</small></span><small class="ms-auto text-muted">{{ person.date_joined|date:'M j' }}</small>
+                </div>
+            {% empty %}
+                <p class="empty-state">
+                    Registered accounts will appear here.
+                </p>
+            {% endfor %}
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Good food, delivered
+{% endblock %}
+{% block content %}
+    <section class="home-hero rounded-5 p-4 p-lg-5 mb-5">
+        <div class="hero-copy">
+            <span class="badge text-bg-warning mb-3">GOOD FOOD, GOOD MOOD</span>
+            <h1>
+                {% if site_content and site_content.hero_heading %}{{ site_content.hero_heading }}{% else %}A little joy,<br>delivered fresh.{% endif %}
+            </h1>
+            <p class="lead">
+                {% if site_content and site_content.hero_subheading %}{{ site_content.hero_subheading }}{% else %}Your neighborhood favorites, made with care and brought right to your door.{% endif %}
+            </p>
+            <a class="btn btn-dark btn-lg" href="{% url 'food:menu' %}">{% if site_content and site_content.cta_label %}{{ site_content.cta_label }}{% else %}Explore the menu{% endif %} <span aria-hidden="true">→</span></a>
+            <div class="hero-proof">
+                <span>✦ Freshly made</span><span>✦ Delivered with care</span>
+            </div>
+        </div>
+        <div class="hero-art">
+            {% if site_content and site_content.hero_image %}
+                <img src="{{ site_content.hero_image.url }}" alt="Freshly prepared restaurant meal">
+            {% else %}
+                <img src="{% static 'food/images/hero-meal.svg' %}" alt="Colorful freshly prepared bowl of food">
+            {% endif %}
+            <span class="hero-sticker">Made<br>with love <b>♥</b></span>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">
+                    FIND YOUR FAVORITE
+                </p>
+                <h2>
+                    What sounds good?
+                </h2>
+            </div>
+            <a href="{% url 'food:menu' %}" class="section-link">See full menu →</a>
+        </div>
+        <div class="row g-3">
+            {% for category in categories %}
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a class="category-tile" href="{% url 'food:menu' %}?category={{ category.pk }}">
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="">
+                    {% else %}
+                        <span class="category-art">{% cycle '🍕' '🍔' '🥡' '🥗' '🍰' '🥤' %}</span>
+                    {% endif %}
+                    <strong>{{ category.name }}</strong><span>Explore →</span>
+                    </a>
+                </div>
+            {% empty %}
+                <div class="col">
+                    <p class="text-muted">
+                        Our menu collections will appear here.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">
+                    A FEW HOUSE FAVORITES
+                </p>
+                <h2>
+                    Popular picks
+                </h2>
+            </div>
+            <a href="{% url 'food:menu' %}" class="section-link">Browse everything →</a>
+        </div>
+        <div class="row g-4">
+            {% for item in foods %}
+                <div class="col-sm-6 col-lg-4">
+                    {% include 'food/_card.html' %}
+                </div>
+            {% empty %}
+                <div class="col">
+                    <div class="empty-menu">
+                        <span>🍽️</span>
+                        <h3>
+                            Your next favorite is on its way
+                        </h3>
+                        <p>
+                            Our kitchen is getting the menu ready.
+                        </p>
+                        <a class="btn btn-outline-dark" href="{% url 'food:menu' %}">Explore menu</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="why-section rounded-5 p-4 p-lg-5 mb-5">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">
+                    THE GOODFOOD WAY
+                </p>
+                <h2>
+                    Good meals. Thoughtful delivery.
+                </h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="why-card">
+                    <span>🥬</span>
+                    <h3>
+                        Made fresh
+                    </h3>
+                    <p>
+                        Food is prepared when you order, so every bite arrives full of flavor.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="why-card">
+                    <span>🛵</span>
+                    <h3>
+                        At your doorstep
+                    </h3>
+                    <p>
+                        Choose your favorites and let us bring dinner a little closer.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="why-card">
+                    <span>♡</span>
+                    <h3>
+                        Local favorites
+                    </h3>
+                    <p>
+                        Discover comfort food and neighborhood classics in one simple menu.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-cta">
+        <div>
+            <p class="eyebrow">
+                HUNGRY YET?
+            </p>
+            <h2>
+                Let’s make tonight delicious.
+            </h2>
+        </div>
+        <a class="btn btn-warning btn-lg" href="{% url 'food:menu' %}">Find your meal →</a>
+    </section>
+{% endblock %}

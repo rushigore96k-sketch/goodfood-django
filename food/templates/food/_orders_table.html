@@ -1,0 +1,49 @@
+{% if orders %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Order
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Total
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>
+                            #{{ order.pk }}
+                        </td>
+                        <td>
+                            {{ order.order_date|date:'M j, Y H:i' }}
+                        </td>
+                        <td>
+                            ₹{{ order.total_amount }}
+                        </td>
+                        <td>
+                            {{ order.status }}
+                        </td>
+                        <td>
+                            <a href="{% url 'food:order_detail' order.pk %}">View</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>
+        No orders placed yet.
+    </p>
+{% endif %}

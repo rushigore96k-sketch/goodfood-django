@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+    Order placed
+{% endblock %}
+{% block content %}
+    <div class="text-center py-5">
+        <div class="display-1">
+            ✅
+        </div>
+        <h1>
+            Order placed!
+        </h1>
+        <p>
+            Your order #{{ order.pk }} is {{ order.status|lower }}. Pay by cash on delivery.
+        </p>
+        <a class="btn btn-dark" href="{% url 'food:order_detail' order.pk %}">Track your order</a>
+    </div>
+{% endblock %}

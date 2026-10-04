@@ -1,0 +1,99 @@
+{% extends 'food/staff/base.html' %}
+{% block title %}
+    Reports
+{% endblock %}
+{% block page_heading %}
+    Reports & statistics
+{% endblock %}
+{% block content %}
+    <div class="page-intro">
+        <div>
+            <p class="eyebrow">
+                BUSINESS SNAPSHOT
+            </p>
+            <h1>
+                Reports & statistics
+            </h1>
+            <p class="text-muted">
+                Revenue counts delivered orders only.
+            </p>
+        </div>
+    </div>
+    <div class="stats-grid report-stats">
+        <div class="stat-card revenue-card">
+            <span>Delivered revenue</span><strong>₹{{ revenue|floatformat:2 }}</strong><small>All time</small>
+        </div>
+        <div class="stat-card">
+            <span>Order statuses</span><small>Counts and order value by status</small>
+        </div>
+    </div>
+    <div class="staff-columns order-columns">
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>
+                        Orders by status
+                    </h2>
+                    <p>
+                        All-time totals
+                    </p>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table staff-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Orders
+                            </th>
+                            <th>
+                                Order value
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in status_summary %}
+                            <tr>
+                                <td>
+                                    {% include 'food/staff/_status.html' with value=row.status %}
+                                </td>
+                                <td>
+                                    {{ row.count }}
+                                </td>
+                                <td>
+                                    ₹{{ row.amount|default:0|floatformat:2 }}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="empty-state">
+                                    No orders to report yet.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>
+                        Last 7 days
+                    </h2>
+                    <p>
+                        Daily order volume and delivered revenue
+                    </p>
+                </div>
+            </div>
+            {% for day in days %}
+                <div class="simple-row">
+                    <strong>{{ day.date|date:'D, M j' }}</strong><span>{{ day.orders }} order{{ day.orders|pluralize }}</span><small class="ms-auto">₹{{ day.revenue|floatformat:2 }}</small>
+                </div>
+            {% endfor %}
+        </section>
+    </div>
+{% endblock %}
